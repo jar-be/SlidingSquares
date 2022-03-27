@@ -20,6 +20,7 @@ public:
     /**
      * @brief Board constructor
      * @param boardSize - size of the board (contains boardSize * boardSize squares)
+     * @exception invalid_argument boardSize must be greater than 2
      */
     CBoard(int boardSize);
 
