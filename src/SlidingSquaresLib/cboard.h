@@ -13,9 +13,17 @@
  */
 class SLIDINGSQUARESLIB_EXPORT CBoard
 {
+    typedef std::vector<std::unique_ptr<CSquare>> boardType;
     int fBoardSize; //!< Board size
-    std::vector<std::unique_ptr<CSquare>> fBoardState; //!< The state of the board
+    boardType fBoardState; //!< The state of the board
     int fMoveCount; //!< How many moves were made
+
+    /**
+     * @brief GetNeighbours returns the indexes of the neighbours of the square
+     * @param squarePosition Find neighbours of the given square
+     * @return Array of indexes of neighbours
+     */
+    std::vector<size_t> GetNeighbours(size_t squarePosition);
 public:
     /**
      * @brief Board constructor
@@ -55,6 +63,10 @@ public:
      * @return How many moves were made
      */
     int MoveCount() const { return fMoveCount; }
+
+    boardType::const_iterator begin() const { return fBoardState.begin(); }
+
+    boardType::const_iterator end() const { return fBoardState.end(); }
 };
 
 #endif // CBOARD_H

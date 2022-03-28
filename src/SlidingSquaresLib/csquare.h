@@ -26,13 +26,28 @@ public:
      * @brief Get id
      * @return Id of the square
      */
-    int Id() const;
+    int Id() const
+    {
+        return fId;
+    }
 
     /**
      * @brief Get display name
      * @return Display name of the square
      */
-    std::string DisplayName() const;
+    std::string DisplayName() const
+    {
+        return fDisplayName;
+    }
+
+    /**
+     * @brief Is this an empty square
+     * @return Is this an empty square
+     */
+    bool IsEmpty() const
+    {
+        return fIsEmpty;
+    }
 };
 
 #endif // CSQUARE_H
