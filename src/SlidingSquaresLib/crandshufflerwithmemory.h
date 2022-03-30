@@ -7,7 +7,7 @@
 class SLIDINGSQUARESLIB_EXPORT CRandShufflerWithMemory : public CShuffler
 {
 public:
-    void Shuffle(std::vector<std::unique_ptr<CSquare> > &boardState);
+    size_t PickMove(const std::vector<size_t> &emptySquareNeighbours);
 };
 
 #endif // CRANDSHUFFLERWITHMEMORY_H

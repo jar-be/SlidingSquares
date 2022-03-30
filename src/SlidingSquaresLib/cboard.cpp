@@ -17,8 +17,9 @@ std::vector<size_t> CBoard::GetNeighbours(size_t squarePosition)
         neighbours.push_back(left);
     }
 
-    if (squarePosition > 0) {
-        neighbours.push_back(squarePosition - fBoardSize);
+    if (squarePosition >= (ulong)fBoardSize) {
+        auto up = squarePosition - fBoardSize;
+        neighbours.push_back(up);
     }
 
     auto down = squarePosition + fBoardSize;
@@ -42,6 +43,17 @@ CBoard::CBoard(int boardSize) : fBoardSize(boardSize), fMoveCount(0)
     }
     int emptyPieceIndex = piecesCount - 1;
     fBoardState.push_back(std::make_unique<CSquare>(emptyPieceIndex, true, std::to_string(emptyPieceIndex)));
+
+    fEmptySquareIndex = emptyPieceIndex;
+}
+
+void CBoard::Shuffle(CShuffler &shuffler, int moves)
+{
+    for (int i = 0; i < moves; ++i) {
+        auto emptyNeighbours = GetNeighbours(fEmptySquareIndex);
+        auto squareToMove = shuffler.PickMove(emptyNeighbours);
+        Move(squareToMove);
+    }
 }
 
 void CBoard::Move(size_t squarePosition)
@@ -55,15 +67,16 @@ void CBoard::Move(size_t squarePosition)
     }
 
     auto neighbours = GetNeighbours(squarePosition);
-    auto empty = std::find_if(neighbours.begin(),
-                              neighbours.end(),
-                              [this](auto idx) { return at(idx).IsEmpty(); });
-    if (empty == neighbours.end()) {
+
+    if (!std::any_of(
+                neighbours.begin(),
+                neighbours.end(),
+                [this](auto idx) { return idx == fEmptySquareIndex; })) {
         throw new std::invalid_argument("Square at squarePosition is not next to an empty square");
     }
 
-    auto emptyIdx = *empty;
-    fBoardState[squarePosition].swap(fBoardState[emptyIdx]);
+    fBoardState[squarePosition].swap(fBoardState[fEmptySquareIndex]);
+    fEmptySquareIndex = squarePosition;
 }
 
 const CSquare& CBoard::at(std::size_t squarePosition) const

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <iostream>
 #include "SlidingSquaresLib_global.h"
 #include "cshuffler.h"
 #include "csquare.h"
@@ -17,6 +18,7 @@ class SLIDINGSQUARESLIB_EXPORT CBoard
     int fBoardSize; //!< Board size
     boardType fBoardState; //!< The state of the board
     int fMoveCount; //!< How many moves were made
+    size_t fEmptySquareIndex; //!< Index of the empty square
 
     /**
      * @brief GetNeighbours returns the indexes of the neighbours of the square
@@ -39,8 +41,9 @@ public:
      * then shuffle it by randomly moving the pieces.
      * @see https://mathworld.wolfram.com/15Puzzle.html
      * @param shuffler The shuffler object to use
+     * @param moves Number of moves to make
      */
-    void Shuffle(CShuffler &shuffler);
+    void Shuffle(CShuffler &shuffler, int moves);
 
     /**
      * @brief Moves the square to an empty square (square has to be next to an empty spot)
@@ -64,9 +67,30 @@ public:
      */
     int MoveCount() const { return fMoveCount; }
 
+    /**
+     * @brief Get EmptySquareIndex
+     * @return Index of the empty square
+     */
+    size_t EmptySquareIndex() const { return fEmptySquareIndex; }
+
     boardType::const_iterator begin() const { return fBoardState.begin(); }
 
     boardType::const_iterator end() const { return fBoardState.end(); }
+
+    friend std::ostream& operator<<(std::ostream& os, const CBoard& v) {
+        int row = 0;
+        int idx = 0;
+        for (const auto &s : v.fBoardState) {
+            if (idx / v.fBoardSize != row) {
+                row = idx / v.fBoardSize;
+                os << std::endl;
+            }
+            os << (s->IsEmpty() ? "[ ]" : s->DisplayName()) << "\t";
+            ++idx;
+        }
+        os << std::endl;
+        return os;
+    }
 };
 
 #endif // CBOARD_H

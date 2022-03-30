@@ -1,6 +1,18 @@
 #include "crandomshuffler.h"
+#include <random>
+#include <functional>
+#include <chrono>
+#include <memory>
 
-void CRandomShuffler::Shuffle(std::vector<std::unique_ptr<CSquare> > &boardState)
+CRandomShuffler::CRandomShuffler() : distribution()
 {
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    generator = std::make_unique<std::default_random_engine>(seed);
+}
 
+size_t CRandomShuffler::PickMove(const std::vector<size_t> &emptySquareNeighbours)
+{
+    auto dice = distribution(*generator);
+    auto idx = dice % emptySquareNeighbours.size();
+    return emptySquareNeighbours.at(idx);
 }
