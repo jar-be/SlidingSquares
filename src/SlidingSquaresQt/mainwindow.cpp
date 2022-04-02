@@ -21,7 +21,7 @@ MainWindow::~MainWindow()
 }
 
 
-QToolButton *MainWindow::createButton(int btnIndex, std::string displayName)
+QToolButton *MainWindow::createButton(int btnIndex)
 {
     auto button = new QToolButton(ui->centralwidget);
     button->setMinimumSize(50, 50);
@@ -30,8 +30,6 @@ QToolButton *MainWindow::createButton(int btnIndex, std::string displayName)
     sizePolicy.setHorizontalPolicy(QSizePolicy::MinimumExpanding);
     sizePolicy.setVerticalPolicy(QSizePolicy::MinimumExpanding);
     sizePolicy.setRetainSizeWhenHidden(true);
-
-    button->setText(displayName.c_str());
 
     QObject::connect(button, &QToolButton::clicked, this, [=]() {
         onGridButtonClicked(btnIndex);
@@ -47,14 +45,13 @@ void MainWindow::clearButtons()
         buttons.pop_back();
         ui->gridLayoutBtns->removeWidget(button);
         delete button;
+        button = nullptr;
     }
     buttons.clear();
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::createButtons()
 {
-    clearButtons();
-
     int size = 4;
     int sqauareCount = size * size;
 
@@ -63,16 +60,41 @@ void MainWindow::on_pushButton_clicked()
     board->Shuffle(shuffler, 100);
 
     for (int i = 0; i < sqauareCount; ++i) {
-        auto square = board->at(i);
-        auto button = createButton(i, square.DisplayName());
+        auto button = createButton(i);
         buttons.push_back(button);
 
         int row = i / size;
         int col = i % size;
         ui->gridLayoutBtns->addWidget(button, row, col);
+    }
+}
+
+void MainWindow::newGame()
+{
+    clearButtons();
+
+    createButtons();
+
+    updateButtons();
+}
+
+void MainWindow::updateButtons()
+{
+    for (size_t i = 0; i < buttons.size(); ++i) {
+        auto button = buttons.at(i);
+        auto square = board->at(i);
+        button->setText(square.DisplayName().c_str());
+
+        if (board->isAtCorrectPlace(i)) {
+            button->setStyleSheet("background-color: green");
+        } else {
+            button->setStyleSheet("background-color: orange");
+        }
 
         if (square.IsEmpty()) {
             button->hide();
+        } else {
+            button->show();
         }
     }
 }
@@ -88,17 +110,22 @@ void MainWindow::onGridButtonClicked(int btnId)
     } catch (std::out_of_range &oor) {
         QMessageBox::critical(ui->centralwidget,
                              "Something is seriously wrong!",
-                             QStringLiteral("This should never hve happend: %1").arg(oor.what()));
+                             QStringLiteral("This should never have happend: %1").arg(oor.what()));
     }
 
-    for (size_t i = 0; i < buttons.size(); ++i) {
-        auto button = buttons.at(i);
-        auto square = board->at(i);
-        button->setText(square.DisplayName().c_str());
-        if (square.IsEmpty()) {
-            button->hide();
-        } else {
-            button->show();
-        }
+    updateButtons();
+
+    if (board->isSolved()) {
+        QMessageBox::information(
+                    ui->centralwidget,
+                    "Solved",
+                    QStringLiteral("You've solved this puzzle in %1 moves").arg(board->MoveCount()));
+        newGame();
     }
 }
+
+void MainWindow::on_actionNew_triggered()
+{
+    newGame();
+}
+

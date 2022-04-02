@@ -77,9 +77,24 @@ void CBoard::Move(size_t squarePosition)
 
     fBoardState[squarePosition].swap(fBoardState[fEmptySquareIndex]);
     fEmptySquareIndex = squarePosition;
+    ++fMoveCount;
 }
 
 const CSquare& CBoard::at(std::size_t squarePosition) const
 {
     return *(fBoardState.at(squarePosition));
+}
+
+bool CBoard::isAtCorrectPlace(std::size_t squarePosition) const
+{
+    return (size_t)fBoardState.at(squarePosition)->Id() == squarePosition;
+}
+
+bool CBoard::isSolved() const {
+    for (size_t i = 0; i < fBoardState.size(); ++i) {
+        if (!isAtCorrectPlace(i)) {
+            return false;
+        }
+    }
+    return true;
 }

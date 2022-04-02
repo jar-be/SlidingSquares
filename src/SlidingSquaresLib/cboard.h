@@ -74,8 +74,9 @@ public:
     size_t EmptySquareIndex() const { return fEmptySquareIndex; }
 
     boardType::const_iterator begin() const { return fBoardState.begin(); }
-
     boardType::const_iterator end() const { return fBoardState.end(); }
+    bool isAtCorrectPlace(std::size_t squarePosition) const;
+    bool isSolved() const;
 
     friend std::ostream& operator<<(std::ostream& os, const CBoard& v) {
         int row = 0;
