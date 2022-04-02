@@ -59,11 +59,11 @@ void CBoard::Shuffle(CShuffler &shuffler, int moves)
 void CBoard::Move(size_t squarePosition)
 {
     if (squarePosition >= fBoardState.size()) {
-        throw new std::out_of_range("squarePosition is out of range");
+        throw std::out_of_range("squarePosition is out of range");
     }
 
     if (at(squarePosition).IsEmpty()) {
-        throw new std::invalid_argument("Square at squarePosition is empty");
+        throw std::invalid_argument("Square is empty");
     }
 
     auto neighbours = GetNeighbours(squarePosition);
@@ -72,7 +72,7 @@ void CBoard::Move(size_t squarePosition)
                 neighbours.begin(),
                 neighbours.end(),
                 [this](auto idx) { return idx == fEmptySquareIndex; })) {
-        throw new std::invalid_argument("Square at squarePosition is not next to an empty square");
+        throw std::invalid_argument("Square is not next to an empty square");
     }
 
     fBoardState[squarePosition].swap(fBoardState[fEmptySquareIndex]);

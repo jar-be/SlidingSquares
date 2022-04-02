@@ -3,8 +3,10 @@
 
 #include <QMainWindow>
 #include <QPushButton>
+#include <QToolButton>
 #include <vector>
 #include <memory>
+#include <cboard.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,8 +23,11 @@ private slots:
     void on_pushButton_clicked();
 
 private:
-    std::vector<std::unique_ptr<QPushButton>> buttons;
     Ui::MainWindow *ui;
-    void on_gridButton_clicked(int btnId);
+    std::unique_ptr<CBoard> board;
+    std::vector<QToolButton*> buttons;
+    void onGridButtonClicked(int btnId);
+    QToolButton *createButton(int btnIndex, std::string displayName);
+    void clearButtons();
 };
 #endif // MAINWINDOW_H

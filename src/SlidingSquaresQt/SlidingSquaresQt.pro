@@ -22,3 +22,10 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../SlidingSquaresLib/release/ -lSlidingSquaresLib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../SlidingSquaresLib/debug/ -lSlidingSquaresLib
+else:unix:!macx: LIBS += -L$$OUT_PWD/../SlidingSquaresLib/ -lSlidingSquaresLib
+
+INCLUDEPATH += $$PWD/../SlidingSquaresLib
+DEPENDPATH += $$PWD/../SlidingSquaresLib
