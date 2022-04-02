@@ -17,7 +17,7 @@ std::vector<size_t> CBoard::GetNeighbours(size_t squarePosition)
         neighbours.push_back(left);
     }
 
-    if (squarePosition >= (ulong)fBoardSize) {
+    if (squarePosition >= (size_t)fBoardSize) {
         auto up = squarePosition - fBoardSize;
         neighbours.push_back(up);
     }
