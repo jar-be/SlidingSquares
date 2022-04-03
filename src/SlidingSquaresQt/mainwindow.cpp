@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QToolButton>
 #include <QTimer>
+#include <QInputDialog>
 #include "cboard.h"
 #include "crandomshuffler.h"
 #include "crandshufflerwithmemory.h"
@@ -14,7 +15,6 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , board(nullptr)
-    , started(false)
 {
     ui->setupUi(this);
     move_count_label = new QLabel(this);
@@ -70,16 +70,16 @@ void MainWindow::clear_buttons()
     buttons.clear();
 }
 
-void MainWindow::create_buttons()
+void MainWindow::create_board(int size)
 {
-    int size = 3;
-    int sqauareCount = size * size;
+    int squareCount = size * size;
+    int shuffleCount = squareCount * 10;
 
     board = std::make_unique<CBoard>(size);
     CRandomShuffler shuffler;
-    board->shuffle(shuffler, 100);
+    board->shuffle(shuffler, shuffleCount);
 
-    for (int i = 0; i < sqauareCount; ++i) {
+    for (int i = 0; i < squareCount; ++i) {
         auto button = create_button(i);
         buttons.push_back(button);
 
@@ -93,10 +93,26 @@ void MainWindow::new_game()
 {
     move_count_label->setText("Moves: 0");
     timer_label->setText("");
+    timer->stop();
+
+    bool ok = false;
+    auto boardSize = QInputDialog::getInt(
+                this,
+                "New game",
+                "Board size: ",
+                3,
+                3,
+                20,
+                1,
+                &ok);
+
+    if (!ok) {
+        return;
+    }
 
     clear_buttons();
 
-    create_buttons();
+    create_board(boardSize);
 
     update_buttons();
 }
@@ -147,8 +163,8 @@ void MainWindow::move_square(int btnId)
                              QStringLiteral("Wrong move attempted: %1").arg(inv_arg.what()));
     } catch (std::out_of_range &oor) {
         QMessageBox::critical(ui->centralwidget,
-                             "Something is seriously wrong!",
-                             QStringLiteral("This should never have happend: %1").arg(oor.what()));
+                              "Something is seriously wrong!",
+                              QStringLiteral("This should never have happend: %1").arg(oor.what()));
     }
 }
 
@@ -170,9 +186,8 @@ long long MainWindow::get_duration()
 
 void MainWindow::on_grid_button_clicked(int btnId)
 {
-    if (!started) {
+    if (!timer->isActive()) {
         start = std::chrono::system_clock::now();
-        started = true;
         timer->start(1000);
     }
 
@@ -181,7 +196,6 @@ void MainWindow::on_grid_button_clicked(int btnId)
     if (board->is_solved()) {
         set_disable_buttons(true);
         timer->stop();
-        started = false;
         auto duration_in_seconds = get_duration();
 
         QMessageBox::information(

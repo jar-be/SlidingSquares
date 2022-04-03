@@ -24,7 +24,6 @@ class MainWindow : public QMainWindow
     QLabel *timer_label;
     QTimer *timer;
     std::chrono::system_clock::time_point start;
-    bool started;
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();    
@@ -36,7 +35,7 @@ private:
     void clear_buttons();
     void new_game();
     void update_buttons();
-    void create_buttons();
+    void create_board(int size);
     void update_buttons(const std::vector<size_t> &buttonIdxs);
     void update_button(size_t i);
     void move_square(int btnId);
