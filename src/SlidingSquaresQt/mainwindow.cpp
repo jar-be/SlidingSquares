@@ -2,8 +2,10 @@
 #include "ui_mainwindow.h"
 
 #include <stdexcept>
+#include <chrono>
 #include <QMessageBox>
 #include <QToolButton>
+#include <QTimer>
 #include "cboard.h"
 #include "crandomshuffler.h"
 #include "crandshufflerwithmemory.h"
@@ -12,11 +14,20 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , board(nullptr)
+    , started(false)
 {
     ui->setupUi(this);
     move_count_label = new QLabel(this);
     move_count_label->setText("Start a new game with Game->New");
     ui->statusbar->addWidget(move_count_label);
+    ui->statusbar->addWidget(new QLabel(this), 1);
+    timer_label = new QLabel(this);
+    ui->statusbar->addWidget(timer_label);
+
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, [=]() {
+        update_timer_label();
+    });
 }
 
 MainWindow::~MainWindow()
@@ -24,6 +35,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::update_timer_label()
+{
+    namespace cr = std::chrono;
+    auto end = cr::system_clock::now();
+    auto diff = end - start;
+    auto in_seconds = cr::duration_cast<cr::seconds>(diff).count();
+    timer_label->setText(QString("Taken: %1s").arg(in_seconds));
+}
 
 QToolButton *MainWindow::create_button(int btnIndex)
 {
@@ -56,7 +75,7 @@ void MainWindow::clear_buttons()
 
 void MainWindow::create_buttons()
 {
-    int size = 4;
+    int size = 3;
     int sqauareCount = size * size;
 
     board = std::make_unique<CBoard>(size);
@@ -76,6 +95,7 @@ void MainWindow::create_buttons()
 void MainWindow::new_game()
 {
     move_count_label->setText("Moves: 0");
+    timer_label->setText("");
 
     clear_buttons();
 
@@ -144,14 +164,29 @@ void MainWindow::set_disable_buttons(bool disabled)
 
 void MainWindow::on_grid_button_clicked(int btnId)
 {
+    if (!started) {
+        start = std::chrono::system_clock::now();
+        started = true;
+        timer->start(1000);
+    }
+
     move_square(btnId);
 
     if (board->is_solved()) {
+        namespace cr = std::chrono;
+        auto end = cr::system_clock::now();
+        auto time_taken_to_solve_puzzle = end - start;
+        auto in_seconds = cr::duration_cast<cr::seconds>(time_taken_to_solve_puzzle);
+
         QMessageBox::information(
                     ui->centralwidget,
                     "Solved",
-                    QStringLiteral("You've solved this puzzle in %1 moves").arg(board->moveCount()));
+                    QStringLiteral("You've solved this puzzle in %1 moves and it took %2 seconds.")
+                    .arg(board->moveCount())
+                    .arg(in_seconds.count()));
         set_disable_buttons(true);
+        timer->stop();
+        started = false;
     }
 }
 

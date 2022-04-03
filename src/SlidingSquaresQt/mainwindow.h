@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QToolButton>
 #include <QLabel>
+#include <QTimer>
 #include <vector>
 #include <memory>
 #include "cboard.h"
@@ -20,6 +21,10 @@ class MainWindow : public QMainWindow
     std::unique_ptr<CBoard> board;
     std::vector<QToolButton*> buttons;
     QLabel *move_count_label;
+    QLabel *timer_label;
+    QTimer *timer;
+    std::chrono::system_clock::time_point start;
+    bool started;
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();    
@@ -36,5 +41,6 @@ private:
     void update_button(size_t i);
     void move_square(int btnId);
     void set_disable_buttons(bool disabled);
+    void update_timer_label();
 };
 #endif // MAINWINDOW_H
