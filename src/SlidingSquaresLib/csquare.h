@@ -8,10 +8,11 @@
  * \class CSquare
  * @brief The square - a piece of the sliding puzzle
  */
-class SLIDINGSQUARESLIB_EXPORT CSquare
+template <typename T>
+class CSquare
 {
     int fId; //!< Unique id of the square
-    std::string fDisplayName; //!< Display name of the square
+    T fDisplayName; //!< Display name of the square
     bool fIsEmpty; //!< Is this an empty square
 public:
     /**
@@ -20,7 +21,9 @@ public:
      * @param isEmpty Is this an empty square
      * @param diplayName The display name of the square
      */
-    CSquare(int id, bool isEmpty, std::string diplayName);
+    CSquare(int id, bool isEmpty, T aDisplayName)
+        : fId(id), fDisplayName(aDisplayName), fIsEmpty(isEmpty)
+    {}
 
     /**
      * @brief Get id
@@ -35,7 +38,7 @@ public:
      * @brief Get display name
      * @return Display name of the square
      */
-    std::string displayName() const
+    T displayName() const
     {
         return fDisplayName;
     }

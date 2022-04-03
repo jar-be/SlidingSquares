@@ -39,10 +39,10 @@ CBoard::CBoard(int boardSize) : fBoardSize(boardSize), fMoveCount(0)
     int piecesCount = boardSize * boardSize;
     fBoardState.reserve(piecesCount);
     for (int idx = 0; idx < piecesCount - 1; ++idx) {
-        fBoardState.push_back(std::make_unique<CSquare>(idx, false, std::to_string(idx)));
+        fBoardState.push_back(std::make_unique<square_t>(idx, false, std::to_string(idx)));
     }
     int emptyPieceIndex = piecesCount - 1;
-    fBoardState.push_back(std::make_unique<CSquare>(emptyPieceIndex, true, std::to_string(emptyPieceIndex)));
+    fBoardState.push_back(std::make_unique<square_t>(emptyPieceIndex, true, std::to_string(emptyPieceIndex)));
 
     fEmptySquareIndex = emptyPieceIndex;
 }
@@ -83,7 +83,7 @@ size_t CBoard::move(size_t squarePosition)
     return newPosition;
 }
 
-const CSquare& CBoard::at(std::size_t squarePosition) const
+const CBoard::square_t &CBoard::at(std::size_t squarePosition) const
 {
     return *(fBoardState.at(squarePosition));
 }

@@ -14,7 +14,8 @@
  */
 class SLIDINGSQUARESLIB_EXPORT CBoard
 {
-    typedef std::vector<std::unique_ptr<CSquare>> boardType;
+    typedef CSquare<std::string> square_t;
+    typedef std::vector<std::unique_ptr<square_t>> boardType;
     int fBoardSize; //!< Board size
     boardType fBoardState; //!< The state of the board
     int fMoveCount; //!< How many moves were made
@@ -60,7 +61,7 @@ public:
      * @return CSquare at the given position
      * @exception out_of_range Given position it out of range
      */
-    const CSquare& at(size_t squarePosition) const;
+    const square_t& at(size_t squarePosition) const;
 
     /**
      * @brief Get the move count
