@@ -26,7 +26,7 @@ public:
      * @brief Get id
      * @return Id of the square
      */
-    int Id() const
+    int id() const
     {
         return fId;
     }
@@ -35,7 +35,7 @@ public:
      * @brief Get display name
      * @return Display name of the square
      */
-    std::string DisplayName() const
+    std::string displayName() const
     {
         return fDisplayName;
     }
@@ -44,7 +44,7 @@ public:
      * @brief Is this an empty square
      * @return Is this an empty square
      */
-    bool IsEmpty() const
+    bool is_empty() const
     {
         return fIsEmpty;
     }

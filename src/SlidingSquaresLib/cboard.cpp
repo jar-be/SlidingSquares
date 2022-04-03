@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <memory>
 
-std::vector<size_t> CBoard::GetNeighbours(size_t squarePosition)
+std::vector<size_t> CBoard::get_neighbours(size_t squarePosition)
 {
     std::vector<size_t> neighbours;
     auto row = squarePosition / fBoardSize;
@@ -47,26 +47,26 @@ CBoard::CBoard(int boardSize) : fBoardSize(boardSize), fMoveCount(0)
     fEmptySquareIndex = emptyPieceIndex;
 }
 
-void CBoard::Shuffle(CShuffler &shuffler, int moves)
+void CBoard::shuffle(CShuffler &shuffler, int moves)
 {
     for (int i = 0; i < moves; ++i) {
-        auto emptyNeighbours = GetNeighbours(fEmptySquareIndex);
-        auto squareToMove = shuffler.PickMove(emptyNeighbours);
-        Move(squareToMove);
+        auto emptyNeighbours = get_neighbours(fEmptySquareIndex);
+        auto squareToMove = shuffler.pick_move(emptyNeighbours);
+        move(squareToMove);
     }
 }
 
-size_t CBoard::Move(size_t squarePosition)
+size_t CBoard::move(size_t squarePosition)
 {
     if (squarePosition >= fBoardState.size()) {
         throw std::out_of_range("squarePosition is out of range");
     }
 
-    if (at(squarePosition).IsEmpty()) {
+    if (at(squarePosition).is_empty()) {
         throw std::invalid_argument("Square is empty");
     }
 
-    auto neighbours = GetNeighbours(squarePosition);
+    auto neighbours = get_neighbours(squarePosition);
 
     if (!std::any_of(
                 neighbours.begin(),
@@ -87,14 +87,14 @@ const CSquare& CBoard::at(std::size_t squarePosition) const
     return *(fBoardState.at(squarePosition));
 }
 
-bool CBoard::isAtCorrectPlace(std::size_t squarePosition) const
+bool CBoard::is_at_correct_place(std::size_t squarePosition) const
 {
-    return (size_t)fBoardState.at(squarePosition)->Id() == squarePosition;
+    return (size_t)fBoardState.at(squarePosition)->id() == squarePosition;
 }
 
-bool CBoard::isSolved() const {
+bool CBoard::is_solved() const {
     for (size_t i = 0; i < fBoardState.size(); ++i) {
-        if (!isAtCorrectPlace(i)) {
+        if (!is_at_correct_place(i)) {
             return false;
         }
     }

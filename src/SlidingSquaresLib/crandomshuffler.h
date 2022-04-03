@@ -13,7 +13,7 @@ class SLIDINGSQUARESLIB_EXPORT CRandomShuffler : public CShuffler
     std::uniform_int_distribution<int> distribution;
 public:
     CRandomShuffler();
-    size_t PickMove(const std::vector<size_t> &emptySquareNeighbours);
+    size_t pick_move(const std::vector<size_t> &emptySquareNeighbours);
 };
 
 #endif // CRANDOMSHUFFLER_H

@@ -11,7 +11,7 @@ int main()
     cout << endl;
 
     CRandomShuffler shuffler;
-    cb.Shuffle(shuffler, 1000);
+    cb.shuffle(shuffler, 1000);
     cout << cb;
     cout << endl;
 

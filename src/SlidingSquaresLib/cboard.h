@@ -25,7 +25,7 @@ class SLIDINGSQUARESLIB_EXPORT CBoard
      * @param squarePosition Find neighbours of the given square
      * @return Array of indexes of neighbours
      */
-    std::vector<size_t> GetNeighbours(size_t squarePosition);
+    std::vector<size_t> get_neighbours(size_t squarePosition);
 public:
     /**
      * @brief Board constructor
@@ -43,7 +43,7 @@ public:
      * @param shuffler The shuffler object to use
      * @param moves Number of moves to make
      */
-    void Shuffle(CShuffler &shuffler, int moves);
+    void shuffle(CShuffler &shuffler, int moves);
 
     /**
      * @brief Moves the square to an empty square (square has to be next to an empty spot)
@@ -52,7 +52,7 @@ public:
      * @exception invalid_argument Square is not next to an empty spot
      * @exception out_of_range Given position it out of range
      */
-    size_t Move(size_t squarePosition);
+    size_t move(size_t squarePosition);
 
     /**
      * @brief Returns the square at the given position
@@ -66,18 +66,18 @@ public:
      * @brief Get the move count
      * @return How many moves were made
      */
-    int MoveCount() const { return fMoveCount; }
+    int moveCount() const { return fMoveCount; }
 
     /**
      * @brief Get EmptySquareIndex
      * @return Index of the empty square
      */
-    size_t EmptySquareIndex() const { return fEmptySquareIndex; }
+    size_t empty_square_index() const { return fEmptySquareIndex; }
 
     boardType::const_iterator begin() const { return fBoardState.begin(); }
     boardType::const_iterator end() const { return fBoardState.end(); }
-    bool isAtCorrectPlace(std::size_t squarePosition) const;
-    bool isSolved() const;
+    bool is_at_correct_place(std::size_t squarePosition) const;
+    bool is_solved() const;
 
     friend std::ostream& operator<<(std::ostream& os, const CBoard& v) {
         int row = 0;
@@ -87,7 +87,7 @@ public:
                 row = idx / v.fBoardSize;
                 os << std::endl;
             }
-            os << (s->IsEmpty() ? "[ ]" : s->DisplayName()) << "\t";
+            os << (s->is_empty() ? "[ ]" : s->displayName()) << "\t";
             ++idx;
         }
         os << std::endl;

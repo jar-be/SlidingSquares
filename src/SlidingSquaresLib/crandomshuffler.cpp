@@ -10,7 +10,7 @@ CRandomShuffler::CRandomShuffler() : distribution()
     generator = std::make_unique<std::default_random_engine>(seed);
 }
 
-size_t CRandomShuffler::PickMove(const std::vector<size_t> &emptySquareNeighbours)
+size_t CRandomShuffler::pick_move(const std::vector<size_t> &emptySquareNeighbours)
 {
     auto dice = distribution(*generator);
     auto idx = dice % emptySquareNeighbours.size();

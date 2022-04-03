@@ -6,7 +6,7 @@
 #include <QToolButton>
 #include <vector>
 #include <memory>
-#include <cboard.h>
+#include "cboard.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,13 +24,13 @@ public:
 private slots:
     void on_actionNew_triggered();
 private:
-    void onGridButtonClicked(int btnId);
-    QToolButton *createButton(int btnIndex);
-    void clearButtons();
-    void newGame();
-    void updateButtons();
-    void createButtons();
-    void updateButtons(const std::vector<size_t> &buttonIdxs);
-    void updateButton(size_t i);
+    void on_grid_button_clicked(int btnId);
+    QToolButton *create_button(int btnIndex);
+    void clear_buttons();
+    void new_game();
+    void update_buttons();
+    void create_buttons();
+    void update_buttons(const std::vector<size_t> &buttonIdxs);
+    void update_button(size_t i);
 };
 #endif // MAINWINDOW_H

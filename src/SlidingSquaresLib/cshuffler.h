@@ -11,7 +11,7 @@ class SLIDINGSQUARESLIB_EXPORT CShuffler
 {
 public:
     virtual ~CShuffler() {}
-    virtual size_t PickMove(const std::vector<size_t> &emptySquareNeighbours) =0;
+    virtual size_t pick_move(const std::vector<size_t> &emptySquareNeighbours) =0;
 };
 
 #endif // CSHUFFLER_H
