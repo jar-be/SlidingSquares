@@ -42,5 +42,6 @@ private:
     void move_square(int btnId);
     void set_disable_buttons(bool disabled);
     void update_timer_label();
+    long long get_duration();
 };
 #endif // MAINWINDOW_H

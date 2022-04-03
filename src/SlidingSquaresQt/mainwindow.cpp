@@ -37,11 +37,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::update_timer_label()
 {
-    namespace cr = std::chrono;
-    auto end = cr::system_clock::now();
-    auto diff = end - start;
-    auto in_seconds = cr::duration_cast<cr::seconds>(diff).count();
-    timer_label->setText(QString("Taken: %1s").arg(in_seconds));
+    auto duration_in_seconds = get_duration();
+    timer_label->setText(QString("Taken: %1s").arg(duration_in_seconds));
 }
 
 QToolButton *MainWindow::create_button(int btnIndex)
@@ -162,6 +159,15 @@ void MainWindow::set_disable_buttons(bool disabled)
     }
 }
 
+long long MainWindow::get_duration()
+{
+    namespace cr = std::chrono;
+    auto end = cr::system_clock::now();
+    auto time_taken_to_solve_puzzle = end - start;
+    auto in_seconds = cr::duration_cast<cr::seconds>(time_taken_to_solve_puzzle);
+    return in_seconds.count();
+}
+
 void MainWindow::on_grid_button_clicked(int btnId)
 {
     if (!started) {
@@ -173,20 +179,17 @@ void MainWindow::on_grid_button_clicked(int btnId)
     move_square(btnId);
 
     if (board->is_solved()) {
-        namespace cr = std::chrono;
-        auto end = cr::system_clock::now();
-        auto time_taken_to_solve_puzzle = end - start;
-        auto in_seconds = cr::duration_cast<cr::seconds>(time_taken_to_solve_puzzle);
+        set_disable_buttons(true);
+        timer->stop();
+        started = false;
+        auto duration_in_seconds = get_duration();
 
         QMessageBox::information(
                     ui->centralwidget,
                     "Solved",
                     QStringLiteral("You've solved this puzzle in %1 moves and it took %2 seconds.")
                     .arg(board->moveCount())
-                    .arg(in_seconds.count()));
-        set_disable_buttons(true);
-        timer->stop();
-        started = false;
+                    .arg(duration_in_seconds));
     }
 }
 
