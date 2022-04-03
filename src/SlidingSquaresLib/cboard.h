@@ -74,11 +74,34 @@ public:
      */
     size_t empty_square_index() const { return fEmptySquareIndex; }
 
+    /**
+     * @brief board begin const iterator
+     * @return const iterator
+     */
     boardType::const_iterator begin() const { return fBoardState.begin(); }
+
+    /**
+     * @brief board end const iterator
+     * @return end const iterator
+     */
     boardType::const_iterator end() const { return fBoardState.end(); }
+
+    /**
+     * @brief Checks whether the square is at the correct place
+     * @param squarePosition The position of the square to check
+     * @return true if at the correct place
+     */
     bool is_at_correct_place(std::size_t squarePosition) const;
+
+    /**
+     * @brief Checks whether the puzzle is solved
+     * @return true if the puzzle is solved
+     */
     bool is_solved() const;
 
+    /**
+     * @brief Overloaded operator<< for easier board printing
+     */
     friend std::ostream& operator<<(std::ostream& os, const CBoard& v) {
         int row = 0;
         int idx = 0;

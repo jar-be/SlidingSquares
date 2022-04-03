@@ -9,6 +9,10 @@
 #include <memory>
 #include <deque>
 
+/**
+ * @brief The CRandShufflerWithMemory class. Shuffles the board randomly but not
+ * using the previous moves.
+ */
 class SLIDINGSQUARESLIB_EXPORT CRandShufflerWithMemory : public CShuffler
 {
     static constexpr int memory_depth = 5;

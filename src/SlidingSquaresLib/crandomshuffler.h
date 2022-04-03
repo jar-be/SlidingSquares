@@ -7,6 +7,9 @@
 #include <functional>
 #include <memory>
 
+/**
+ * @brief The CRandomShuffler class. Shuffles board randomly picking a square to move
+ */
 class SLIDINGSQUARESLIB_EXPORT CRandomShuffler : public CShuffler
 {
     std::unique_ptr<std::default_random_engine> generator;
