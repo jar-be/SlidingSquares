@@ -35,5 +35,6 @@ private:
     void update_buttons(const std::vector<size_t> &buttonIdxs);
     void update_button(size_t i);
     void move_square(int btnId);
+    void set_disable_buttons(bool disabled);
 };
 #endif // MAINWINDOW_H

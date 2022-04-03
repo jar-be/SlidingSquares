@@ -6,6 +6,7 @@
 #include <QToolButton>
 #include "cboard.h"
 #include "crandomshuffler.h"
+#include "crandshufflerwithmemory.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -83,7 +84,8 @@ void MainWindow::new_game()
     update_buttons();
 }
 
-void MainWindow::update_buttons(const std::vector<size_t> &buttonIdxs) {
+void MainWindow::update_buttons(const std::vector<size_t> &buttonIdxs)
+{
     for (const auto &idx : buttonIdxs) {
         update_button(idx);
     }
@@ -133,6 +135,13 @@ void MainWindow::move_square(int btnId)
     }
 }
 
+void MainWindow::set_disable_buttons(bool disabled)
+{
+    for (const auto &btn : buttons) {
+        btn->setDisabled(disabled);
+    }
+}
+
 void MainWindow::on_grid_button_clicked(int btnId)
 {
     move_square(btnId);
@@ -142,7 +151,7 @@ void MainWindow::on_grid_button_clicked(int btnId)
                     ui->centralwidget,
                     "Solved",
                     QStringLiteral("You've solved this puzzle in %1 moves").arg(board->moveCount()));
-        new_game();
+        set_disable_buttons(true);
     }
 }
 
