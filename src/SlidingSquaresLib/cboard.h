@@ -48,10 +48,11 @@ public:
     /**
      * @brief Moves the square to an empty square (square has to be next to an empty spot)
      * @param squarePosition The position of the square to move
+     * @return new position of the moved square
      * @exception invalid_argument Square is not next to an empty spot
      * @exception out_of_range Given position it out of range
      */
-    void Move(size_t squarePosition);
+    size_t Move(size_t squarePosition);
 
     /**
      * @brief Returns the square at the given position

@@ -56,7 +56,7 @@ void CBoard::Shuffle(CShuffler &shuffler, int moves)
     }
 }
 
-void CBoard::Move(size_t squarePosition)
+size_t CBoard::Move(size_t squarePosition)
 {
     if (squarePosition >= fBoardState.size()) {
         throw std::out_of_range("squarePosition is out of range");
@@ -76,8 +76,10 @@ void CBoard::Move(size_t squarePosition)
     }
 
     fBoardState[squarePosition].swap(fBoardState[fEmptySquareIndex]);
+    auto newPosition = fEmptySquareIndex;
     fEmptySquareIndex = squarePosition;
     ++fMoveCount;
+    return newPosition;
 }
 
 const CSquare& CBoard::at(std::size_t squarePosition) const

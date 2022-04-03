@@ -30,5 +30,7 @@ private:
     void newGame();
     void updateButtons();
     void createButtons();
+    void updateButtons(const std::vector<size_t> &buttonIdxs);
+    void updateButton(size_t i);
 };
 #endif // MAINWINDOW_H

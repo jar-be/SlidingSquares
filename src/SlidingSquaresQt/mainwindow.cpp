@@ -24,7 +24,7 @@ MainWindow::~MainWindow()
 QToolButton *MainWindow::createButton(int btnIndex)
 {
     auto button = new QToolButton(ui->centralwidget);
-    button->setMinimumSize(50, 50);
+    button->setMinimumSize(20, 20);
     button->setMaximumSize(1000, 1000);
     auto sizePolicy = button->sizePolicy();
     sizePolicy.setHorizontalPolicy(QSizePolicy::MinimumExpanding);
@@ -78,31 +78,45 @@ void MainWindow::newGame()
     updateButtons();
 }
 
+void MainWindow::updateButtons(const std::vector<size_t> &buttonIdxs) {
+    for (const auto &idx : buttonIdxs) {
+        updateButton(idx);
+    }
+}
+
+void MainWindow::updateButton(size_t i)
+{
+    auto button = buttons.at(i);
+    auto square = board->at(i);
+    button->setText(square.DisplayName().c_str());
+
+    const QString styleBase = "font-size: 1.2em; background-color: %1;";
+    if (board->isAtCorrectPlace(i)) {
+        button->setStyleSheet(styleBase.arg("green"));
+    } else {
+        button->setStyleSheet(styleBase.arg("orange"));
+    }
+
+    if (square.IsEmpty()) {
+        button->hide();
+    } else {
+        button->show();
+    }
+}
+
 void MainWindow::updateButtons()
 {
     for (size_t i = 0; i < buttons.size(); ++i) {
-        auto button = buttons.at(i);
-        auto square = board->at(i);
-        button->setText(square.DisplayName().c_str());
-
-        if (board->isAtCorrectPlace(i)) {
-            button->setStyleSheet("background-color: green");
-        } else {
-            button->setStyleSheet("background-color: orange");
-        }
-
-        if (square.IsEmpty()) {
-            button->hide();
-        } else {
-            button->show();
-        }
+        updateButton(i);
     }
 }
 
 void MainWindow::onGridButtonClicked(int btnId)
 {
     try {
-        board->Move(btnId);
+        auto newSquarePosition = board->Move(btnId);
+        updateButtons({ newSquarePosition, (size_t)btnId });
+
     } catch (std::invalid_argument &inv_arg) {
         QMessageBox::warning(ui->centralwidget,
                              "Wrong move!",
@@ -112,8 +126,6 @@ void MainWindow::onGridButtonClicked(int btnId)
                              "Something is seriously wrong!",
                              QStringLiteral("This should never have happend: %1").arg(oor.what()));
     }
-
-    updateButtons();
 
     if (board->isSolved()) {
         QMessageBox::information(
@@ -128,4 +140,3 @@ void MainWindow::on_actionNew_triggered()
 {
     newGame();
 }
-
