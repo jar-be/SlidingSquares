@@ -13,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
     , board(nullptr)
 {
     ui->setupUi(this);
+    move_count_label = new QLabel(this);
+    move_count_label->setText("Start a new game with Game->New");
+    ui->statusbar->addWidget(move_count_label);
 }
 
 MainWindow::~MainWindow()
@@ -71,6 +74,8 @@ void MainWindow::create_buttons()
 
 void MainWindow::new_game()
 {
+    move_count_label->setText("Moves: 0");
+
     clear_buttons();
 
     create_buttons();
@@ -111,12 +116,12 @@ void MainWindow::update_buttons()
     }
 }
 
-void MainWindow::on_grid_button_clicked(int btnId)
+void MainWindow::move_square(int btnId)
 {
     try {
         auto newSquarePosition = board->move(btnId);
         update_buttons({ newSquarePosition, (size_t)btnId });
-
+        move_count_label->setText(QString("Moves: %1").arg(board->moveCount()));
     } catch (std::invalid_argument &inv_arg) {
         QMessageBox::warning(ui->centralwidget,
                              "Wrong move!",
@@ -126,6 +131,11 @@ void MainWindow::on_grid_button_clicked(int btnId)
                              "Something is seriously wrong!",
                              QStringLiteral("This should never have happend: %1").arg(oor.what()));
     }
+}
+
+void MainWindow::on_grid_button_clicked(int btnId)
+{
+    move_square(btnId);
 
     if (board->is_solved()) {
         QMessageBox::information(

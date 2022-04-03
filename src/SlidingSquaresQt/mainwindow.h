@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QToolButton>
+#include <QLabel>
 #include <vector>
 #include <memory>
 #include "cboard.h"
@@ -18,6 +19,7 @@ class MainWindow : public QMainWindow
     Ui::MainWindow *ui;
     std::unique_ptr<CBoard> board;
     std::vector<QToolButton*> buttons;
+    QLabel *move_count_label;
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();    
@@ -32,5 +34,6 @@ private:
     void create_buttons();
     void update_buttons(const std::vector<size_t> &buttonIdxs);
     void update_button(size_t i);
+    void move_square(int btnId);
 };
 #endif // MAINWINDOW_H

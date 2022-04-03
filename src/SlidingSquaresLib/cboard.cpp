@@ -54,6 +54,7 @@ void CBoard::shuffle(CShuffler &shuffler, int moves)
         auto squareToMove = shuffler.pick_move(emptyNeighbours);
         move(squareToMove);
     }
+    fMoveCount = 0;
 }
 
 size_t CBoard::move(size_t squarePosition)
