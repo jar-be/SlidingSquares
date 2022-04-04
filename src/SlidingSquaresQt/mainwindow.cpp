@@ -2,19 +2,15 @@
 #include "ui_mainwindow.h"
 
 #include <stdexcept>
-#include <chrono>
 #include <QMessageBox>
 #include <QToolButton>
 #include <QTimer>
 #include <QInputDialog>
-#include "cboard.h"
-#include "crandomshuffler.h"
-#include "crandshufflerwithmemory.h"
+#include "cgame.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , board(nullptr)
 {
     ui->setupUi(this);
     move_count_label = new QLabel(this);
@@ -37,8 +33,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::update_timer_label()
 {
-    auto duration_in_seconds = get_duration();
-    timer_label->setText(QString("Taken: %1s").arg(duration_in_seconds));
+    auto duration_in_seconds = the_game.get_game_stats().get_duration().get_formatted_duration();
+    timer_label->setText(QString("Taken: %1").arg(duration_in_seconds.c_str()));
 }
 
 QToolButton *MainWindow::create_button(int btnIndex)
@@ -72,14 +68,16 @@ void MainWindow::clear_buttons()
 
 void MainWindow::create_board(int size)
 {
-    int squareCount = size * size;
-    int shuffleCount = squareCount * 10;
+    the_game.new_game(size);
+    the_game.shuffle();
 
-    board = std::make_unique<CBoard>(size);
-    CRandomShuffler shuffler;
-    board->shuffle(shuffler, shuffleCount);
+    create_buttons(size);
+}
 
-    for (int i = 0; i < squareCount; ++i) {
+void MainWindow::create_buttons(int size)
+{
+    int buttonsCount = size * size;
+    for (int i = 0; i < buttonsCount; ++i) {
         auto button = create_button(i);
         buttons.push_back(button);
 
@@ -127,20 +125,21 @@ void MainWindow::update_buttons(const std::vector<size_t> &buttonIdxs)
 void MainWindow::update_button(size_t i)
 {
     auto button = buttons.at(i);
-    auto square = board->at(i);
-    button->setText(square.displayName().c_str());
+    auto display_name = the_game.get_display_name(i);
+
+    if (display_name.empty()) {
+        button->setText("");
+        button->hide();
+    } else {
+        button->setText(display_name.c_str());
+        button->show();
+    }
 
     const QString styleBase = "font-size: 15px; font-weight: bold; background-color: %1;";
-    if (board->is_at_correct_place(i)) {
+    if (the_game.is_at_correct_place(i)) {
         button->setStyleSheet(styleBase.arg("lightgreen"));
     } else {
         button->setStyleSheet(styleBase.arg("orange"));
-    }
-
-    if (square.is_empty()) {
-        button->hide();
-    } else {
-        button->show();
     }
 }
 
@@ -154,9 +153,9 @@ void MainWindow::update_buttons()
 void MainWindow::move_square(int btnId)
 {
     try {
-        auto newSquarePosition = board->move(btnId);
+        auto newSquarePosition = the_game.move(btnId);
         update_buttons({ newSquarePosition, (size_t)btnId });
-        move_count_label->setText(QString("Moves: %1").arg(board->moveCount()));
+        move_count_label->setText(QString("Moves: %1").arg(the_game.get_game_stats().get_move_count()));
     } catch (std::invalid_argument &inv_arg) {
         QMessageBox::warning(ui->centralwidget,
                              "Wrong move!",
@@ -175,35 +174,25 @@ void MainWindow::set_disable_buttons(bool disabled)
     }
 }
 
-long long MainWindow::get_duration()
-{
-    namespace cr = std::chrono;
-    auto end = cr::system_clock::now();
-    auto time_taken_to_solve_puzzle = end - start;
-    auto in_seconds = cr::duration_cast<cr::seconds>(time_taken_to_solve_puzzle);
-    return in_seconds.count();
-}
-
 void MainWindow::on_grid_button_clicked(int btnId)
 {
     if (!timer->isActive()) {
-        start = std::chrono::system_clock::now();
         timer->start(1000);
     }
 
     move_square(btnId);
 
-    if (board->is_solved()) {
+    if (the_game.is_solved()) {
         set_disable_buttons(true);
         timer->stop();
-        auto duration_in_seconds = get_duration();
+        auto duration = the_game.get_game_stats().get_duration().get_formatted_duration();
 
         QMessageBox::information(
                     ui->centralwidget,
                     "Solved",
-                    QStringLiteral("You've solved this puzzle in %1 moves and it took %2 seconds.")
-                    .arg(board->moveCount())
-                    .arg(duration_in_seconds));
+                    QStringLiteral("You've solved this puzzle in %1 moves and it took you %2.")
+                    .arg(the_game.get_game_stats().get_move_count())
+                    .arg(duration.c_str()));
     }
 }
 

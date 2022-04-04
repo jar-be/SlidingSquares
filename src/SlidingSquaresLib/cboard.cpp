@@ -30,7 +30,7 @@ std::vector<size_t> CBoard::get_neighbours(size_t squarePosition)
     return neighbours;
 }
 
-CBoard::CBoard(int boardSize) : fBoardSize(boardSize), fMoveCount(0)
+CBoard::CBoard(int boardSize) : fBoardSize(boardSize)
 {
     if (boardSize < 3) {
         throw std::invalid_argument("boardSize must be greater than 2");
@@ -54,7 +54,6 @@ void CBoard::shuffle(CShuffler &shuffler, int moves)
         auto squareToMove = shuffler.pick_move(emptyNeighbours);
         move(squareToMove);
     }
-    fMoveCount = 0;
 }
 
 size_t CBoard::move(size_t squarePosition)
@@ -79,7 +78,6 @@ size_t CBoard::move(size_t squarePosition)
     fBoardState[squarePosition].swap(fBoardState[fEmptySquareIndex]);
     auto newPosition = fEmptySquareIndex;
     fEmptySquareIndex = squarePosition;
-    ++fMoveCount;
     return newPosition;
 }
 
