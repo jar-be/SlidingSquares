@@ -2,7 +2,6 @@
 #define CSQUARE_H
 
 #include <string>
-#include "SlidingSquaresLib_global.h"
 
 /**
  * \class CSquare

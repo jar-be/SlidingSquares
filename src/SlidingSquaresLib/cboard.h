@@ -4,7 +4,6 @@
 #include <vector>
 #include <memory>
 #include <iostream>
-#include "SlidingSquaresLib_global.h"
 #include "cshuffler.h"
 #include "csquare.h"
 
@@ -12,13 +11,12 @@
  * \class CBoard
  * @brief The CBoard class contains the puzzle board
  */
-class SLIDINGSQUARESLIB_EXPORT CBoard
+class CBoard
 {
     typedef CSquare<std::string> square_t;
-    typedef std::vector<std::unique_ptr<square_t>> boardType;
+    typedef std::vector<std::unique_ptr<square_t>> board_t;
     int fBoardSize; //!< Board size
-    boardType fBoardState; //!< The state of the board
-    int fMoveCount; //!< How many moves were made
+    board_t fBoardState; //!< The state of the board
     size_t fEmptySquareIndex; //!< Index of the empty square
 
     /**
@@ -64,12 +62,6 @@ public:
     const square_t& at(size_t squarePosition) const;
 
     /**
-     * @brief Get the move count
-     * @return How many moves were made
-     */
-    int moveCount() const { return fMoveCount; }
-
-    /**
      * @brief Get EmptySquareIndex
      * @return Index of the empty square
      */
@@ -79,13 +71,13 @@ public:
      * @brief board begin const iterator
      * @return const iterator
      */
-    boardType::const_iterator begin() const { return fBoardState.begin(); }
+    board_t::const_iterator begin() const { return fBoardState.begin(); }
 
     /**
      * @brief board end const iterator
      * @return end const iterator
      */
-    boardType::const_iterator end() const { return fBoardState.end(); }
+    board_t::const_iterator end() const { return fBoardState.end(); }
 
     /**
      * @brief Checks whether the square is at the correct place
@@ -99,6 +91,12 @@ public:
      * @return true if the puzzle is solved
      */
     bool is_solved() const;
+
+    /**
+     * @brief Returns the board size
+     * @return board size
+     */
+    int boardSize() const { return fBoardSize; }
 
     /**
      * @brief Overloaded operator<< for easier board printing

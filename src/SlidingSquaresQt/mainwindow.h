@@ -8,7 +8,7 @@
 #include <QTimer>
 #include <vector>
 #include <memory>
-#include "cboard.h"
+#include "cgame.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,12 +18,11 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     Ui::MainWindow *ui;
-    std::unique_ptr<CBoard> board;
+    CGame the_game;
     std::vector<QToolButton*> buttons;
     QLabel *move_count_label;
     QLabel *timer_label;
     QTimer *timer;
-    std::chrono::system_clock::time_point start;
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();    
@@ -41,6 +40,6 @@ private:
     void move_square(int btnId);
     void set_disable_buttons(bool disabled);
     void update_timer_label();
-    long long get_duration();
+    void create_buttons(int size);
 };
 #endif // MAINWINDOW_H
