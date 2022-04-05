@@ -69,7 +69,7 @@ void MainWindow::clear_buttons()
 void MainWindow::create_board(int size)
 {
     the_game.new_game(size);
-    the_game.shuffle();
+    the_game.shuffle(CGame::random);
 
     create_buttons(size);
 }
@@ -177,7 +177,7 @@ void MainWindow::set_disable_buttons(bool disabled)
 void MainWindow::on_grid_button_clicked(int btnId)
 {
     if (!timer->isActive()) {
-        timer->start(1000);
+        timer->start(500);
     }
 
     move_square(btnId);

@@ -10,6 +10,7 @@ SOURCES += \
     cduration.cpp \
     cgame.cpp \
     cgamestats.cpp \
+    cpicklowestshuffler.cpp \
     crandomshuffler.cpp \
     crandshufflerwithmemory.cpp \
     cshuffler.cpp \
@@ -23,6 +24,7 @@ HEADERS += \
     cduration.h \
     cgame.h \
     cgamestats.h \
+    cpicklowestshuffler.h \
     crandomshuffler.h \
     crandshufflerwithmemory.h \
     cshuffler.h \

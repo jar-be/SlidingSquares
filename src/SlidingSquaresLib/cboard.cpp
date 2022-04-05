@@ -51,6 +51,7 @@ void CBoard::shuffle(CShuffler &shuffler, int moves)
 {
     for (int i = 0; i < moves; ++i) {
         auto emptyNeighbours = get_neighbours(fEmptySquareIndex);
+        std::vector<int> emptyNeighboursIds;
         auto squareToMove = shuffler.pick_move(emptyNeighbours);
         move(squareToMove);
     }

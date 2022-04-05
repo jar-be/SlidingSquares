@@ -3,6 +3,7 @@
 
 #include "cshuffler.h"
 #include "SlidingSquaresLib_global.h"
+#include "crandomshuffler.h"
 
 #include <random>
 #include <functional>
@@ -13,12 +14,10 @@
  * @brief The CRandShufflerWithMemory class. Shuffles the board randomly but not
  * using the previous moves.
  */
-class SLIDINGSQUARESLIB_EXPORT CRandShufflerWithMemory : public CShuffler
+class SLIDINGSQUARESLIB_EXPORT CRandShufflerWithMemory : public CRandomShuffler
 {
-    static constexpr int memory_depth = 5;
-    std::unique_ptr<std::default_random_engine> generator;
-    std::uniform_int_distribution<int> distribution;
-    std::deque<size_t> previous_picks;
+    bool has_previous_pick;
+    size_t previous_pick;
 public:
     CRandShufflerWithMemory();
     size_t pick_move(const std::vector<size_t> &emptySquareNeighbours);
