@@ -51,8 +51,16 @@ void CBoard::shuffle(CShuffler &shuffler, int moves)
 {
     for (int i = 0; i < moves; ++i) {
         auto emptyNeighbours = get_neighbours(fEmptySquareIndex);
-        std::vector<int> emptyNeighboursIds;
-        auto squareToMove = shuffler.pick_move(emptyNeighbours);
+        std::unordered_map<size_t, size_t> idToIdx;
+        std::vector<size_t> ids;
+        ids.reserve(emptyNeighbours.size());
+        for (const auto &idx : emptyNeighbours) {
+            auto id = at(idx).id();
+            idToIdx[id] = idx;
+            ids.push_back(id);
+        }
+        auto idOfSquareToMove = shuffler.pick_move(ids);
+        auto squareToMove = idToIdx[idOfSquareToMove];
         move(squareToMove);
     }
 }
